@@ -34,15 +34,15 @@ import { ModalComponent } from './modal.component';
 
       <!-- Contadores de resumen -->
       <div class="grid grid-cols-3 gap-4 mb-10">
-        <div class="bg-surface-container-lowest rounded-xl p-4 border border-surface-variant text-center">
+        <div class="bg-surface-container-lowest rounded-xl p-4 border border-surface-variant text-center hover:shadow-md hover:-translate-y-0.5 hover:border-primary/30 transition-all duration-300 cursor-pointer">
           <div class="text-3xl font-bold text-primary">{{ totalTasks() }}</div>
           <div class="text-xs font-semibold text-on-surface-variant mt-1 uppercase tracking-wide">Total</div>
         </div>
-        <div class="bg-surface-container-lowest rounded-xl p-4 border border-surface-variant text-center">
+        <div class="bg-surface-container-lowest rounded-xl p-4 border border-surface-variant text-center hover:shadow-md hover:-translate-y-0.5 hover:border-secondary/30 transition-all duration-300 cursor-pointer">
           <div class="text-3xl font-bold text-secondary">{{ pendingTasks() }}</div>
           <div class="text-xs font-semibold text-on-surface-variant mt-1 uppercase tracking-wide">Pendientes</div>
         </div>
-        <div class="bg-surface-container-lowest rounded-xl p-4 border border-surface-variant text-center">
+        <div class="bg-surface-container-lowest rounded-xl p-4 border border-surface-variant text-center hover:shadow-md hover:-translate-y-0.5 hover:border-outline/30 transition-all duration-300 cursor-pointer">
           <div class="text-3xl font-bold text-on-surface-variant">{{ completedTasks() }}</div>
           <div class="text-xs font-semibold text-on-surface-variant mt-1 uppercase tracking-wide">Completadas</div>
         </div>
@@ -53,22 +53,22 @@ import { ModalComponent } from './modal.component';
         <button
           id="filter-all"
           (click)="filter.set('all')"
-          [class]="filter() === 'all' ? 'bg-secondary-container text-on-secondary-container' : 'bg-surface-container-highest text-on-surface hover:bg-surface-variant'"
-          class="px-6 py-2 rounded-full font-semibold transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary">
+          [class]="filter() === 'all' ? 'bg-secondary-container text-on-secondary-container shadow-sm hover:bg-secondary-fixed hover:-translate-y-0.5' : 'bg-surface-container-highest text-on-surface hover:bg-surface-variant hover:text-primary'"
+          class="px-6 py-2 rounded-full font-semibold transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-primary">
           Todas
         </button>
         <button
           id="filter-pending"
           (click)="filter.set('pending')"
-          [class]="filter() === 'pending' ? 'bg-secondary-container text-on-secondary-container' : 'bg-surface-container-highest text-on-surface hover:bg-surface-variant'"
-          class="px-6 py-2 rounded-full font-semibold transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary">
+          [class]="filter() === 'pending' ? 'bg-secondary-container text-on-secondary-container shadow-sm hover:bg-secondary-fixed hover:-translate-y-0.5' : 'bg-surface-container-highest text-on-surface hover:bg-surface-variant hover:text-primary'"
+          class="px-6 py-2 rounded-full font-semibold transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-primary">
           Pendientes
         </button>
         <button
           id="filter-completed"
           (click)="filter.set('completed')"
-          [class]="filter() === 'completed' ? 'bg-secondary-container text-on-secondary-container' : 'bg-surface-container-highest text-on-surface hover:bg-surface-variant'"
-          class="px-6 py-2 rounded-full font-semibold transition-colors outline-none focus-visible:ring-2 focus-visible:ring-primary">
+          [class]="filter() === 'completed' ? 'bg-secondary-container text-on-secondary-container shadow-sm hover:bg-secondary-fixed hover:-translate-y-0.5' : 'bg-surface-container-highest text-on-surface hover:bg-surface-variant hover:text-primary'"
+          class="px-6 py-2 rounded-full font-semibold transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-primary">
           Completadas
         </button>
       </div>
@@ -96,7 +96,7 @@ import { ModalComponent } from './modal.component';
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @for (task of filteredTasks(); track task.id) {
           <div
-            class="bg-surface-container-lowest rounded-xl p-6 flex flex-col gap-4 shadow-surface hover:shadow-elevated hover:-translate-y-1 transition-all duration-200 border border-surface-variant relative overflow-hidden group"
+            class="bg-surface-container-lowest rounded-xl p-6 flex flex-col gap-4 shadow-surface hover:shadow-elevated hover:-translate-y-1 hover:border-primary/30 transition-all duration-300 border border-surface-variant relative overflow-hidden group"
             [class.opacity-70]="task.status === 'completed'">
 
             <!-- Barra de prioridad (sólo en pendientes) -->
@@ -140,7 +140,7 @@ import { ModalComponent } from './modal.component';
               <div class="flex items-center gap-2 text-on-surface-variant text-sm font-medium">
                 @if (task.status === 'completed') {
                   <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                  <span>Completada</span>
+                  <span>Completada {{ task.completedAt ? formatDateTime(task.completedAt) : '' }}</span>
                 } @else if (task.dueDate) {
                   <span class="material-symbols-outlined text-[18px]">event</span>
                   <span>{{ formatDate(task.dueDate) }}</span>
@@ -269,7 +269,7 @@ export class TaskListComponent {
     this.toastTimer = setTimeout(() => this.showSuccessToast.set(false), 3000);
   }
 
-  // Formatea una fecha ISO a formato legible en español
+  // Formatea una fecha ISO a formato legible en español (solo fecha)
   formatDate(dateStr: string): string {
     if (!dateStr) return '';
     try {
@@ -277,6 +277,17 @@ export class TaskListComponent {
       return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
     } catch {
       return dateStr;
+    }
+  }
+
+  // Formatea una fecha ISO a formato legible con fecha y hora
+  formatDateTime(dateStr: string): string {
+    if (!dateStr) return '';
+    try {
+      const date = new Date(dateStr);
+      return date.toLocaleString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+    } catch {
+      return '';
     }
   }
 

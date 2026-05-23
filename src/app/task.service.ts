@@ -8,47 +8,11 @@ export interface Task {
   priority: 'baja' | 'media' | 'alta';
   status: 'pending' | 'completed';
   createdAt: string;
+  completedAt?: string;
 }
 
-// Tareas de ejemplo para el primer arranque
-const SAMPLE_TASKS: Task[] = [
-  {
-    id: '1',
-    title: 'Revisión de Diseño Q3',
-    description: 'Finalizar la auditoría de componentes compartidos y actualizar el sistema de diseño según las nuevas pautas orgánicas.',
-    dueDate: '2026-06-15',
-    priority: 'alta',
-    status: 'pending',
-    createdAt: new Date().toISOString()
-  },
-  {
-    id: '2',
-    title: 'Preparar Presentación Cliente',
-    description: 'Reunir los slides finales para la demostración del viernes. Asegurar que los colores reflejen el tema Sereno.',
-    dueDate: '2026-06-20',
-    priority: 'media',
-    status: 'pending',
-    createdAt: new Date().toISOString()
-  },
-  {
-    id: '3',
-    title: 'Sincronización de Equipo',
-    description: 'Llamada semanal para alinear objetivos de desarrollo.',
-    dueDate: '2026-06-10',
-    priority: 'media',
-    status: 'completed',
-    createdAt: new Date().toISOString()
-  },
-  {
-    id: '4',
-    title: 'Actualizar Dependencias',
-    description: 'Revisar y actualizar los paquetes npm al último parche de seguridad.',
-    dueDate: '2026-06-12',
-    priority: 'baja',
-    status: 'pending',
-    createdAt: new Date().toISOString()
-  }
-];
+// Tareas de ejemplo para el primer arranque (vaciado para que inicie limpio)
+const SAMPLE_TASKS: Task[] = [];
 
 const STORAGE_KEY = 'tareas-pendientes-v1';
 
@@ -107,9 +71,17 @@ export class TaskService {
 
   // Alterna el estado entre pendiente y completada
   toggleStatus(id: string) {
-    this.tasks.update(ts => ts.map(t =>
-      t.id === id ? { ...t, status: t.status === 'pending' ? 'completed' : 'pending' } : t
-    ));
+    this.tasks.update(ts => ts.map(t => {
+      if (t.id === id) {
+        const isPending = t.status === 'pending';
+        return { 
+          ...t, 
+          status: isPending ? 'completed' : 'pending',
+          completedAt: isPending ? new Date().toISOString() : undefined
+        };
+      }
+      return t;
+    }));
   }
 
   // Elimina una tarea por id

@@ -12,19 +12,6 @@
     <!-- Acciones del navbar -->
     <div class="flex items-center gap-3">
 
-      <!-- Botón ajustes rápidos -->
-      <button
-        id="btn-header-settings"
-        (click)="openSettings()"
-        class="navbar-icon-btn"
-        title="Ajustes"
-        aria-label="Abrir ajustes">
-        <span class="material-symbols-outlined">settings</span>
-      </button>
-
-      <!-- Separador vertical -->
-      <div class="w-px h-6 bg-surface-variant"></div>
-
       <!-- Contenedor del perfil (avatar + nombre + dropdown) -->
       <div id="profile-dropdown-container" class="relative flex items-center gap-2.5">
 
@@ -122,15 +109,7 @@
     <!-- ═══════════════ SIDEBAR (slide hover) ═══════════════ -->
     <nav class="sidebar-nav group/sidebar" aria-label="Navegación principal">
 
-      <!-- Logo compacto (visible solo en estado colapsado, desaparece al expandir) -->
-      <div class="flex items-center justify-center h-12 mb-4 overflow-hidden">
-        <span
-          class="material-symbols-outlined text-primary text-[26px] opacity-100 group-hover/sidebar:opacity-0 transition-opacity duration-150"
-          style="font-variation-settings: 'FILL' 1;">
-          task_alt
-        </span>
-        <span class="sidebar-label text-sm font-bold text-primary whitespace-nowrap pl-1">Mi Espacio</span>
-      </div>
+
 
       <!-- Items de navegación principal -->
       <div class="flex flex-col gap-1 flex-1">
