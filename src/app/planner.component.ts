@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, inject, signal, computed } from '@angular/core';
 import { TaskService, Task } from './task.service';
 import { CommonModule } from '@angular/common'; // we use Date pipe in components sometimes but here we format manually
+import { RouterLink } from '@angular/router';
 
 interface CalendarDay {
   date: Date;
@@ -12,7 +13,7 @@ interface CalendarDay {
 @Component({
   selector: 'app-planner',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="p-4 md:p-8 lg:p-12 pb-24 max-w-[1600px] mx-auto w-full h-full flex flex-col">
@@ -109,11 +110,15 @@ interface CalendarDay {
         <!-- Details Sidebar -->
         <div class="lg:flex-1 flex flex-col gap-6 w-full lg:max-w-md shrink-0 lg:h-full">
           <div class="bg-surface-container-lowest rounded-xl border border-surface-variant shadow-surface p-6 md:p-8 flex flex-col gap-6 flex-1 overflow-hidden lg:h-full">
-            <div class="flex items-center justify-between shrink-0">
+            <div class="flex flex-col gap-4 shrink-0">
               <div>
                 <h3 class="text-2xl md:text-3xl font-bold text-on-surface mb-1 capitalize">{{ formatDateHeader(selectedDate()) }}</h3>
                 <p class="text-on-surface-variant font-medium capitalize">{{ formatDayName(selectedDate()) }}</p>
               </div>
+              <a routerLink="/tasks/new" class="flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-primary text-on-primary font-semibold text-sm hover:opacity-90 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-primary w-full">
+                <span class="material-symbols-outlined text-[18px]">add</span>
+                Agregar tarea
+              </a>
             </div>
 
             <div class="flex-1 overflow-y-auto pr-2 custom-scrollbar min-h-[200px]">
